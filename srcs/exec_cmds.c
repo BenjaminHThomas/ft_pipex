@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 08:55:58 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 12:48:43 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 13:52:21 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,12 @@ static void	redirect_io(int fdin, int fdout, t_pipe *data)
 	}
 }
 
-int	child(t_pipe *data, int i)
+void	child(t_pipe *data, int i)
 {
 	int	retval;
 	int	idx;
 
 	idx = i - 2;
-	ft_printf("Idx: %d\n", idx);
 	retval = 0;
 	data->pid = fork();
 	if (data->pid < 0)
@@ -42,28 +41,29 @@ int	child(t_pipe *data, int i)
 	}
 	if (data->pid == 0)
 	{
-		ft_printf("\ni %d, ac %d\n", i, data->ac);
 		if (i == 2)
 		{
-			ft_printf("First iteration\n");
+			printf("first iteration\n");
+			printf("path: %s\n", data->cmd_paths[idx]);
 			redirect_io(data->fdinfile, data->pipe_arr[idx][1], data);
 		}
 		else if (i == (data->ac - 2))
 		{
+			printf("final iteration.\n");
+			printf("path: %s\n", data->cmd_paths[idx]);
 			redirect_io(data->pipe_arr[idx][0], data->fdoutfile, data);
-			ft_printf("Last iteration\n");
 		}
 		else
 		{
+			printf("middle iteration.\n");
 			redirect_io(data->pipe_arr[idx][0], data->pipe_arr[idx][1],
 						data);
-			ft_printf("Middle iteration\n");
 		}
 		close_fds(data);
 		retval = execve(data->cmd_paths[idx], data->cmd_args[idx],
 						data->envp);
+		clean_exit(data, retval);
 	}
-	return (retval);
 }
 
 int	exec_cmds(t_pipe *data)
@@ -75,10 +75,7 @@ int	exec_cmds(t_pipe *data)
 	retval = 0;
 	while (i < (data->ac - 1))
 	{
-		ft_printf("Iter: %d\n", i);
-		retval = child(data, i);
-		if (retval != 0)
-			clean_exit(data, retval);
+		child(data, i);
 		waitpid(data->pid, NULL, 0);
 		i++;
 	}
