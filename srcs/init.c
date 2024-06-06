@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:41:17 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 18:44:54 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 19:13:38 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,16 @@ static int	init_pipes(t_pipe *data)
 	int	limit;
 
 	limit = data->ac - 2;
-	data->pipe_arr = (int **)ft_calloc(sizeof(int *), (limit + 1));
-	if (!data->pipe_arr)
+	data->pipes = (int **)ft_calloc(sizeof(int *), (limit + 1));
+	if (!data->pipes)
 		return (1);
 	i = 0;
 	while (i < limit)
 	{
-		data->pipe_arr[i] = (int *)malloc(sizeof(int) * 2);
-		if (!data->pipe_arr[i])
+		data->pipes[i] = (int *)malloc(sizeof(int) * 2);
+		if (!data->pipes[i])
 			return (1);
-		if (pipe(data->pipe_arr[i]) == -1)
+		if (pipe(data->pipes[i]) == -1)
 		{
 			perror("Error: could not open pipe.\n");
 			return (1);

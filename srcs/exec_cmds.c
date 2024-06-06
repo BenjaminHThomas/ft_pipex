@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 08:55:58 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 19:05:21 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 19:13:18 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,22 +55,20 @@ int	child(t_pipe *data, int i)
 	idx = i - 2;
 	retval = 0;
 	if (i == (data->ac - 2))
-		close(data->pipe_arr[idx][1]);
+		close(data->pipes[idx][1]);
 	data->pid = fork();
 	if (data->pid < 0)
 		clean_exit(data, 1);
 	if (data->pid == 0)
 	{
 		if (i == 2)
-			redirect_io(data->fdinfile, data->pipe_arr[idx + 1][1], data);
+			redirect_io(data->fdinfile, data->pipes[idx + 1][1], data);
 		else if (i == (data->ac - 2))
-			redirect_io(data->pipe_arr[idx][0], data->fdoutfile, data);
+			redirect_io(data->pipes[idx][0], data->fdoutfile, data);
 		else
-			redirect_io(data->pipe_arr[idx][0], data->pipe_arr[idx + 1][1],
-						data);
+			redirect_io(data->pipes[idx][0], data->pipes[idx + 1][1], data);
 		close_fds(data);
-		retval = execve(data->cmd_paths[idx], data->cmd_args[idx],
-						data->envp);
+		retval = execve(data->cmd_paths[idx], data->cmd_args[idx], data->envp);
 	}
 	else
 		waitpid(data->pid, NULL, 0);
@@ -90,8 +88,8 @@ int	exec_cmds(t_pipe *data)
 		if (retval != 0)
 			clean_exit(data, retval);
 		waitpid(data->pid, NULL, 0);
-		close(data->pipe_arr[i - 2][0]);
-		close(data->pipe_arr[i - 2][1]);
+		close(data->pipes[i - 2][0]);
+		close(data->pipes[i - 2][1]);
 		i++;
 	}
 	return (retval);

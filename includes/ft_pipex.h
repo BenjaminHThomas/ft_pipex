@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 11:30:25 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 18:44:29 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 19:11:53 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_pipe
 	char	**cmd_paths;
 	char	***cmd_args;
 	int		cmd_count;
-	int		**pipe_arr;
+	int		**pipes;
 	pid_t	pid;
 }	t_pipe;
 
