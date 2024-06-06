@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:05:21 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 11:30:49 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 19:01:00 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	close_fds(t_pipe *data)
 	close(data->fdinfile);
 	close(data->fdoutfile);
 	i = 0;
-	while (i < (data->ac - 3))
+	while (i < data->cmd_count)
 	{
 		y = 0;
 		while (y < 2)

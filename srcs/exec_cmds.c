@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 08:55:58 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 17:49:33 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 19:05:21 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,26 @@ static void	redirect_io(int fdin, int fdout, t_pipe *data)
 	}
 }
 
+/*
 void	debug_print(t_pipe *data, int i)
 {
+	int	j;
+
 	if (i == 2)
 		ft_printf("First iteration.\n");
 	else if (i == (data->ac - 2))
 		ft_printf("Last iteration.\n");
 	else
 		ft_printf("Middle iteration.\n");
-	ft_printf("Path: %s\n", data->cmd_paths[i - 2]);
-	ft_printf("Cmd: %s\n", data->av[i]);
+	ft_printf("path: %s\n", data->cmd_paths[i - 2]);
+	ft_printf("cmd: %s\n", data->av[i]);
+	ft_printf("Number of commands: %d\n", data->ac - 3);
+	j = 0;
+	while (data->pipe_arr[j])
+		j++;
+	ft_printf("Number of pipes: %d\n\n", j);
 }
+*/
 
 int	child(t_pipe *data, int i)
 {
@@ -45,15 +54,13 @@ int	child(t_pipe *data, int i)
 
 	idx = i - 2;
 	retval = 0;
+	if (i == (data->ac - 2))
+		close(data->pipe_arr[idx][1]);
 	data->pid = fork();
 	if (data->pid < 0)
-	{
-		perror("Error: could not fork process.\n");
 		clean_exit(data, 1);
-	}
 	if (data->pid == 0)
 	{
-		debug_print(data, i);
 		if (i == 2)
 			redirect_io(data->fdinfile, data->pipe_arr[idx + 1][1], data);
 		else if (i == (data->ac - 2))
@@ -83,6 +90,8 @@ int	exec_cmds(t_pipe *data)
 		if (retval != 0)
 			clean_exit(data, retval);
 		waitpid(data->pid, NULL, 0);
+		close(data->pipe_arr[i - 2][0]);
+		close(data->pipe_arr[i - 2][1]);
 		i++;
 	}
 	return (retval);

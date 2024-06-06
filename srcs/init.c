@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:41:17 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 17:36:00 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 18:44:54 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	init_pipes(t_pipe *data)
 	int	limit;
 
 	limit = data->ac - 2;
-	data->pipe_arr = (int **)malloc(sizeof(int *) * (limit + 1));
+	data->pipe_arr = (int **)ft_calloc(sizeof(int *), (limit + 1));
 	if (!data->pipe_arr)
 		return (1);
 	i = 0;
@@ -82,6 +82,7 @@ int	init(t_pipe *data, int ac, char **av, char **envp)
 	data->envp = envp;
 	data->av = av;
 	data->ac = ac;
+	data->cmd_count = ac - 3;
 	data->cmd_args = ft_calloc(sizeof(char ***) + 1, 1);
 	if (!data->cmd_args)
 		return (1);
