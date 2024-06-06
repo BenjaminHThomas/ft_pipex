@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 08:55:58 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 19:13:18 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 19:27:36 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static void	redirect_io(int fdin, int fdout, t_pipe *data)
 	}
 }
 
-/*
 void	debug_print(t_pipe *data, int i)
 {
 	int	j;
@@ -41,11 +40,10 @@ void	debug_print(t_pipe *data, int i)
 	ft_printf("cmd: %s\n", data->av[i]);
 	ft_printf("Number of commands: %d\n", data->ac - 3);
 	j = 0;
-	while (data->pipe_arr[j])
+	while (data->pipes[j])
 		j++;
 	ft_printf("Number of pipes: %d\n\n", j);
 }
-*/
 
 int	child(t_pipe *data, int i)
 {
@@ -61,6 +59,7 @@ int	child(t_pipe *data, int i)
 		clean_exit(data, 1);
 	if (data->pid == 0)
 	{
+		debug_print(data, i);
 		if (i == 2)
 			redirect_io(data->fdinfile, data->pipes[idx + 1][1], data);
 		else if (i == (data->ac - 2))
