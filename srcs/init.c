@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:41:17 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 12:38:31 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 17:36:00 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static int	get_paths(t_pipe *data)
 	int		i;
 	char	*path;
 
-	i = 2;
-	while (i < (data->ac - 1))
+	i = 0;
+	while (i < (data->ac - 3))
 	{
-		path = find_path(data->envp, data->av[i]);
+		path = find_path(data->envp, data->cmd_args[i][0]);
 		if (!path)
 		{
 			perror("Error: command not found\n");
@@ -94,7 +94,7 @@ int	init(t_pipe *data, int ac, char **av, char **envp)
 	data->fdoutfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (data->fdoutfile == -1)
 		return (1);
-	if (get_paths(data) || get_cmds(data) || init_pipes(data))
+	if (get_cmds(data) || get_paths(data) || init_pipes(data))
 		return (1);
 	return (0);
 }
