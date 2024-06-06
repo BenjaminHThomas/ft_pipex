@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:41:17 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 19:13:38 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 19:24:34 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	init_pipes(t_pipe *data)
 	int	limit;
 
 	limit = data->ac - 2;
-	data->pipes = (int **)ft_calloc(sizeof(int *), (limit + 1));
+	data->pipes = (int **)ft_calloc(sizeof(int *), limit + 1);
 	if (!data->pipes)
 		return (1);
 	i = 0;
@@ -83,10 +83,10 @@ int	init(t_pipe *data, int ac, char **av, char **envp)
 	data->av = av;
 	data->ac = ac;
 	data->cmd_count = ac - 3;
-	data->cmd_args = ft_calloc(sizeof(char ***) + 1, 1);
+	data->cmd_args = ft_calloc(sizeof(char **), data->cmd_count + 1);
 	if (!data->cmd_args)
 		return (1);
-	data->cmd_paths = ft_calloc(sizeof(char **) + 1, 1);
+	data->cmd_paths = ft_calloc(sizeof(char *), data->cmd_count + 1);
 	if (!data->cmd_paths)
 		return (1);
 	data->fdinfile = open(av[1], O_RDONLY);

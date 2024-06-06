@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:05:21 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 19:15:31 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 19:21:42 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	free_mem(t_pipe *data)
 			i++;
 		}
 		free(data->cmd_args);
-		data->cmd_args = NULL;
 	}
 	if (data->pipes)
 	{
@@ -60,15 +59,18 @@ void	close_fds(t_pipe *data)
 	int	i;
 	int	y;
 
-	close(data->fdinfile);
-	close(data->fdoutfile);
+	if (data->fdinfile >= 0)
+		close(data->fdinfile);
+	if (data->fdoutfile >= 0)
+		close(data->fdoutfile);
 	i = 0;
 	while (i < data->cmd_count)
 	{
 		y = 0;
 		while (y < 2)
 		{
-			close(data->pipes[i][y]);
+			if (data->pipes[i][y] >= 0)
+				close(data->pipes[i][y]);
 			y++;
 		}
 		i++;
