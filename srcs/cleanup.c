@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:05:21 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 19:13:57 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 19:15:31 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ void	free_mem(t_pipe *data)
 		free(data->cmd_args);
 		data->cmd_args = NULL;
 	}
-	if (data->pipe_arr)
+	if (data->pipes)
 	{
 		i = -1;
-		while (data->pipe_arr[++i])
-			free(data->pipe_arr[i]);
-		free(data->pipe_arr);
+		while (data->pipes[++i])
+			free(data->pipes[i]);
+		free(data->pipes);
 	}
 }
 
@@ -68,7 +68,7 @@ void	close_fds(t_pipe *data)
 		y = 0;
 		while (y < 2)
 		{
-			close(data->pipe_arr[i][y]);
+			close(data->pipes[i][y]);
 			y++;
 		}
 		i++;
