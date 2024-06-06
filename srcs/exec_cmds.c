@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 08:55:58 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 12:48:43 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 17:49:33 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,24 @@ static void	redirect_io(int fdin, int fdout, t_pipe *data)
 	}
 }
 
+void	debug_print(t_pipe *data, int i)
+{
+	if (i == 2)
+		ft_printf("First iteration.\n");
+	else if (i == (data->ac - 2))
+		ft_printf("Last iteration.\n");
+	else
+		ft_printf("Middle iteration.\n");
+	ft_printf("Path: %s\n", data->cmd_paths[i - 2]);
+	ft_printf("Cmd: %s\n", data->av[i]);
+}
+
 int	child(t_pipe *data, int i)
 {
 	int	retval;
 	int	idx;
 
 	idx = i - 2;
-	ft_printf("Idx: %d\n", idx);
 	retval = 0;
 	data->pid = fork();
 	if (data->pid < 0)
@@ -42,27 +53,20 @@ int	child(t_pipe *data, int i)
 	}
 	if (data->pid == 0)
 	{
-		ft_printf("\ni %d, ac %d\n", i, data->ac);
+		debug_print(data, i);
 		if (i == 2)
-		{
-			ft_printf("First iteration\n");
-			redirect_io(data->fdinfile, data->pipe_arr[idx][1], data);
-		}
+			redirect_io(data->fdinfile, data->pipe_arr[idx + 1][1], data);
 		else if (i == (data->ac - 2))
-		{
 			redirect_io(data->pipe_arr[idx][0], data->fdoutfile, data);
-			ft_printf("Last iteration\n");
-		}
 		else
-		{
-			redirect_io(data->pipe_arr[idx][0], data->pipe_arr[idx][1],
+			redirect_io(data->pipe_arr[idx][0], data->pipe_arr[idx + 1][1],
 						data);
-			ft_printf("Middle iteration\n");
-		}
 		close_fds(data);
 		retval = execve(data->cmd_paths[idx], data->cmd_args[idx],
 						data->envp);
 	}
+	else
+		waitpid(data->pid, NULL, 0);
 	return (retval);
 }
 
@@ -75,7 +79,6 @@ int	exec_cmds(t_pipe *data)
 	retval = 0;
 	while (i < (data->ac - 1))
 	{
-		ft_printf("Iter: %d\n", i);
 		retval = child(data, i);
 		if (retval != 0)
 			clean_exit(data, retval);

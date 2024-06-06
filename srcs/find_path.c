@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 18:00:56 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 10:00:52 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/06 17:50:41 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ char	*find_path(char **envp, char *cmd)
 	char	**split_path;
 	char	*exec_path;
 
-	if (access(cmd, X_OK))
-		return (ft_strdup(cmd));
 	i = -1;
 	path = NULL;
 	while (envp[++i] && !path)
@@ -69,5 +67,7 @@ char	*find_path(char **envp, char *cmd)
 	while (split_path[++i] && exec_path == NULL)
 		exec_path = is_callable(split_path[i], cmd);
 	free_arr(split_path);
+	if (!exec_path && access(cmd, X_OK) != -1)
+		return (ft_strdup(cmd));
 	return (exec_path);
 }
