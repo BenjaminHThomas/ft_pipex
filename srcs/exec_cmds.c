@@ -26,6 +26,7 @@ static void	redirect_io(int fdin, int fdout, t_pipe *data)
 	}
 }
 
+/*
 void	debug_print(t_pipe *data, int i)
 {
 	int	j;
@@ -44,11 +45,13 @@ void	debug_print(t_pipe *data, int i)
 		j++;
 	ft_printf("Number of pipes: %d\n\n", j);
 }
+*/
 
 int	child(t_pipe *data, int i)
 {
 	int	retval;
 	int	idx;
+	int	status;
 
 	idx = i - 2;
 	retval = 0;
@@ -58,7 +61,6 @@ int	child(t_pipe *data, int i)
 		clean_exit(data, 1);
 	if (data->pid == 0)
 	{
-		debug_print(data, i);
 		if (i == 2)
 			redirect_io(data->fdinfile, data->pipes[idx + 1][1], data);
 		else if (i == (data->ac - 2))
@@ -69,7 +71,7 @@ int	child(t_pipe *data, int i)
 		retval = execve(data->cmd_paths[idx], data->cmd_args[idx], data->envp);
 	}
 	else
-		waitpid(data->pid, NULL, 0);
+		waitpid(-1, &status, 0);
 	return (retval);
 }
 

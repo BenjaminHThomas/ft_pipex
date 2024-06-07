@@ -67,7 +67,7 @@ char	*find_path(char **envp, char *cmd)
 	while (split_path[++i] && exec_path == NULL)
 		exec_path = is_callable(split_path[i], cmd);
 	free_arr(split_path);
-	if (!exec_path && access(cmd, X_OK) != -1)
+	if (!exec_path)
 		return (ft_strdup(cmd));
 	return (exec_path);
 }
