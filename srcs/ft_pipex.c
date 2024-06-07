@@ -17,7 +17,7 @@ int	main(int ac, char **av, char **envp)
 	t_pipe	data;
 	int		retval;
 
-	if (ac != 5)
+	if (ac < 5)
 		return (1);
 	if (init(&data, ac, av, envp))
 	{

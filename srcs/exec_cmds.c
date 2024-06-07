@@ -25,7 +25,7 @@ static void	redirect_io(int fdin, int fdout, t_pipe *data)
 		clean_exit(data, 1);
 	}
 }
-/*
+
 void	debug_print(t_pipe *data, int i)
 {
 	int	j;
@@ -44,7 +44,6 @@ void	debug_print(t_pipe *data, int i)
 		j++;
 	ft_printf("Number of pipes: %d\n\n", j);
 }
-*/
 
 int	child(t_pipe *data, int i)
 {
@@ -53,13 +52,13 @@ int	child(t_pipe *data, int i)
 
 	idx = i - 2;
 	retval = 0;
-	if (i == (data->ac - 2))
-		close(data->pipes[idx][1]);
+	close(data->pipes[idx][1]);
 	data->pid = fork();
 	if (data->pid < 0)
 		clean_exit(data, 1);
 	if (data->pid == 0)
 	{
+		debug_print(data, i);
 		if (i == 2)
 			redirect_io(data->fdinfile, data->pipes[idx + 1][1], data);
 		else if (i == (data->ac - 2))
