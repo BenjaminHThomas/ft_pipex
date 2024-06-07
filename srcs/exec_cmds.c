@@ -87,8 +87,6 @@ int	exec_cmds(t_pipe *data)
 		if (retval != 0)
 			clean_exit(data, retval);
 		waitpid(data->pid, NULL, 0);
-		close(data->pipes[i - 2][0]);
-		close(data->pipes[i - 2][1]);
 		i++;
 	}
 	return (retval);
