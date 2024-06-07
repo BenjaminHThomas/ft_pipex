@@ -23,7 +23,7 @@ static int	get_paths(t_pipe *data)
 		path = find_path(data->envp, data->cmd_args[i][0]);
 		if (!path)
 		{
-			perror("Error: command not found\n");
+			ft_putstr_fd("Error: command not found\n", 2);
 			return (1);
 		}
 		append_path(data, path);
@@ -43,7 +43,7 @@ static int	get_cmds(t_pipe *data)
 		cmd = get_split(data->av[i]);
 		if (!cmd)
 		{
-			perror("Error: could not split command.\n");
+			ft_putstr_fd("Error: could not split command.\n", 2);
 			return (1);
 		}
 		append_cmd(data, cmd);
@@ -69,7 +69,7 @@ static int	init_pipes(t_pipe *data)
 			return (1);
 		if (pipe(data->pipes[i]) == -1)
 		{
-			perror("Error: could not open pipe.\n");
+			ft_putstr_fd("Error: could not open pipe.\n", 2);
 			return (1);
 		}
 		i++;
@@ -79,21 +79,22 @@ static int	init_pipes(t_pipe *data)
 
 int	init(t_pipe *data, int ac, char **av, char **envp)
 {
+	ft_memset(data, 0, sizeof(*data));
+	data->fdinfile = open(av[1], O_RDONLY);
+	if (data->fdinfile <= 0)
+		return (1);
+	data->fdoutfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (data->fdoutfile <= 0)
+		return (1);
 	data->envp = envp;
 	data->av = av;
 	data->ac = ac;
 	data->cmd_count = ac - 3;
 	data->cmd_args = ft_calloc(sizeof(char **), data->cmd_count + 1);
 	if (!data->cmd_args)
-		return (1);
+		exit(1);
 	data->cmd_paths = ft_calloc(sizeof(char *), data->cmd_count + 1);
 	if (!data->cmd_paths)
-		return (1);
-	data->fdinfile = open(av[1], O_RDONLY);
-	if (data->fdinfile == -1)
-		return (1);
-	data->fdoutfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (data->fdoutfile == -1)
 		return (1);
 	if (get_cmds(data) || get_paths(data) || init_pipes(data))
 		return (1);

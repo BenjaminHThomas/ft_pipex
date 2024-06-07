@@ -22,6 +22,7 @@ int	main(int ac, char **av, char **envp)
 	if (init(&data, ac, av, envp))
 	{
 		free_mem(&data);
+		close_fds(&data);
 		return (1);
 	}
 	retval = exec_cmds(&data);

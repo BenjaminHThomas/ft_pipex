@@ -36,15 +36,12 @@ void	free_mem(t_pipe *data)
 	i = 0;
 	if (data->cmd_paths)
 		free_arr(data->cmd_paths);
-	if (data->cmd_args)
+	while (i < data->cmd_count)
 	{
-		while (data->cmd_args[i])
-		{
-			free_arr(data->cmd_args[i]);
+		free_arr(data->cmd_args[i]);
 			i++;
-		}
-		free(data->cmd_args);
 	}
+	free(data->cmd_args);
 	if (data->pipes)
 	{
 		i = -1;
@@ -64,7 +61,7 @@ void	close_fds(t_pipe *data)
 	if (data->fdoutfile >= 0)
 		close(data->fdoutfile);
 	i = 0;
-	while (i < data->cmd_count)
+	while (data->pipes && data->pipes[i])
 	{
 		y = 0;
 		while (y < 2)
