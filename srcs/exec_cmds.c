@@ -6,13 +6,13 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 08:55:58 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 19:27:36 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/08 19:09:46 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_pipex.h"
 
-static void	redirect_io(int fdin, int fdout, t_pipe *data)
+static void	io_swap(int fdin, int fdout, t_pipe *data)
 {
 	if (dup2(fdin, STDIN_FILENO) == -1)
 	{
@@ -49,12 +49,9 @@ void	debug_print(t_pipe *data, int i)
 
 int	child(t_pipe *data, int i)
 {
-	int	retval;
 	int	idx;
-	int	status;
 
 	idx = i - 2;
-	retval = 0;
 	close(data->pipes[idx][1]);
 	data->pid = fork();
 	if (data->pid < 0)
@@ -62,17 +59,16 @@ int	child(t_pipe *data, int i)
 	if (data->pid == 0)
 	{
 		if (i == 2)
-			redirect_io(data->fdinfile, data->pipes[idx + 1][1], data);
+			io_swap(data->fdinfile, data->pipes[idx + 1][1], data);
 		else if (i == (data->ac - 2))
-			redirect_io(data->pipes[idx][0], data->fdoutfile, data);
+			io_swap(data->pipes[idx][0], data->fdoutfile, data);
 		else
-			redirect_io(data->pipes[idx][0], data->pipes[idx + 1][1], data);
-		close_fds(data);
-		retval = execve(data->cmd_paths[idx], data->cmd_args[idx], data->envp);
+			io_swap(data->pipes[idx][0], data->pipes[idx + 1][1], data);
+		execve(data->cmd_paths[idx], data->cmd_args[idx], data->envp);
+		clean_exit(data, 1);
 	}
-	else
-		waitpid(-1, &status, 0);
-	return (retval);
+	waitpid(-1, NULL, 0);
+	return (0);
 }
 
 int	exec_cmds(t_pipe *data)

@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:05:21 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 19:21:42 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/08 19:12:57 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	free_mem(t_pipe *data)
 	while (i < data->cmd_count)
 	{
 		free_arr(data->cmd_args[i]);
-			i++;
+		i++;
 	}
 	free(data->cmd_args);
 	if (data->pipes)
