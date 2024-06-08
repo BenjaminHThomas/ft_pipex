@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:41:17 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/06 19:24:34 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/08 20:59:34 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,9 @@ int	init(t_pipe *data, int ac, char **av, char **envp)
 		exit(1);
 	data->cmd_paths = ft_calloc(sizeof(char *), data->cmd_count + 1);
 	if (!data->cmd_paths)
+		return (1);
+	data->pids = (pid_t *)malloc(sizeof(pid_t) * data->cmd_count);
+	if (!data->pids)
 		return (1);
 	if (get_cmds(data) || get_paths(data) || init_pipes(data))
 		return (1);

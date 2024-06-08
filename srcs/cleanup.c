@@ -6,7 +6,7 @@
 /*   By: bthomas <bthomas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:05:21 by bthomas           #+#    #+#             */
-/*   Updated: 2024/06/08 19:12:57 by bthomas          ###   ########.fr       */
+/*   Updated: 2024/06/08 21:04:55 by bthomas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,7 @@ void	clean_exit(t_pipe *data, int exitcode)
 {
 	close_fds(data);
 	free_mem(data);
+	if (data->pids)
+		free(data->pids);
 	exit(exitcode);
 }
